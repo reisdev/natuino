@@ -1,23 +1,27 @@
 {
-  "main": "node_modules/expo/AppEntry.js",
+  "name": "natuino",
+  "author": "Matheus dos Reis <matheusdrdj@gmail.com",
+  "description": "App to control Arduino Boards",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "eject": "expo eject"
+    "start": "react-native start",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios"
   },
   "dependencies": {
-    "expo": "^31.0.2",
-    "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
+    "react": "^16.5.1",
+    "react-native": "^0.57.3",
     "react-native-ble-plx": "^1.0.1",
+    "react-native-bluetooth-serial": "^1.0.0-rc1",
     "react-native-elements": "^0.19.1",
+    "react-native-vector-icons": "^6.1.0",
     "react-navigation": "^3.0.8",
     "react-redux": "^6.0.0",
     "redux": "^4.0.1"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.0.0"
+    "@babel/runtime": "^7.2.0",
+    "babel-preset-expo": "^5.0.0",
+    "schedule": "^0.4.0"
   },
   "private": true
 }
