@@ -34,7 +34,7 @@ export default class DevicesList extends Component {
           color={"white"}
           backgroundColor={"#0F728F"}
           buttonStyle={{width: "50%"}}
-          textStyle={{height: "80%", flex: 1, alignContent: "center"}}
+          textStyle={{flex: 1, alignContent: "center"}}
           onPress={this.scanDevice}
           title={"Scan"}
         />
