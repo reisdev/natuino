@@ -1,57 +1,136 @@
 import React, { Component } from "react";
 
 import {
-  FlatList,
+  Alert,
+  ToastAndroid,
   View,
   Text,
   StyleSheet,
-  ToastAndroid
+  ScrollView
 } from "react-native";
-import { Button, Card, Icon } from "react-native-elements";
+import { Button, List, ListItem } from "react-native-elements";
 
+const ListModel = props => (
+  <View>
+    <Text
+      style={{
+        fontWeight: "bold",
+        fontSize: 20,
+        paddingTop: 20,
+        paddingLeft: 15
+      }}
+    >
+      {props.title}
+    </Text>
+    <List>
+      {props.devices.map(item => (
+        <ListItem
+          containerStyle={{
+            backgroundColor: props.deviceId === item.id ? "green" : "white"
+          }}
+          key={item.id}
+          onPressRightIcon={e => props.connect(item)}
+          rightIcon={{ name: "bluetooth" }}
+          title={item.name}
+          subtitle={`ID: ${item.id}`}
+        />
+      ))}
+    </List>
+  </View>
+);
 export default class DevicesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      devices: []
+      paired: [],
+      unpaired: [],
+      deviceId: 0,
+      deviceName: ""
     };
   }
   async componentDidMount() {
-    if(! await this.props.bt.isConnected()) {
-      ToastAndroid.showWithGravityAndOffset("Not connected to any device",2000,ToastAndroid.BOTTOM,0,25)
-    }
     this.scanDevice();
   }
   scanDevice = async e => {
-    const list = await this.props.bt.discoverUnpairedDevices();
-    this.setState({ devices: list });
+    const unpaired = await this.props.bt.discoverUnpairedDevices();
+    const paired = await this.props.bt.list();
+    this.setState({ paired, unpaired });
+  };
+  connect = device => {
+    this.props.bt
+      .connect(device.id)
+      .then(res => {
+        this.setState({ deviceId: device.id, deviceName: device.name });
+      })
+      .catch(error => {
+        ToastAndroid.showWithGravityAndOffset(
+          `Connection error: Device not available`,
+          6000,
+          ToastAndroid.BOTTOM,
+          0,
+          25
+        );
+      });
+  };
+
+  disconnect = () => {
+    this.props.bt
+      .disconnect()
+      .then(res => {
+        this.setState({ deviceId: 0, deviceName: "" });
+      })
+      .catch(error => {
+        ToastAndroid.showWithGravityAndOffset(
+          `Error: Not possible to disconnect`,
+          6000,
+          ToastAndroid.BOTTOM,
+          0,
+          25
+        );
+      });
   };
   render() {
     return (
       <View style={styles.container}>
-        <Button
-          rounded
-          color={"white"}
-          backgroundColor={"#0F728F"}
-          buttonStyle={{width: "50%"}}
-          textStyle={{flex: 1, alignContent: "center"}}
-          onPress={this.scanDevice}
-          title={"Scan"}
-        />
-        <FlatList
-          data={this.state.devices}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => (
-            <Card key={item.id} title={item.name}>
-              <Text key={item.id}> ID: {item.id}</Text>
-              <Button key={item.id}
-                backgroundColor={"#0F728F"} 
-                icon={{name: "bluetooth"}} 
-                title="Connect"
-              />
-            </Card>
-          )}
-        />
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-around"
+          }}
+        >
+          <Button
+            rounded
+            color={"white"}
+            backgroundColor={"#0F728F"}
+            large
+            onPress={this.scanDevice}
+            title={"Scan"}
+          />
+          <Button
+            rounded
+            disabled={this.state.deviceId === 0}
+            color={"white"}
+            backgroundColor={"#0F728F"}
+            large
+            onPress={this.disconnect}
+            title={"Disconnect"}
+          />
+        </View>
+        <ScrollView>
+          <ListModel
+            title={"Paired devices"}
+            devices={this.state.paired}
+            connect={this.connect}
+            deviceId={this.state.deviceId}
+          />
+          <ListModel
+            title={"Available devices"}
+            devices={this.state.unpaired}
+            connect={this.connect}
+            deviceId={this.state.deviceId}
+          />
+        </ScrollView>
       </View>
     );
   }
@@ -60,8 +139,8 @@ export default class DevicesList extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    paddingTop: 10
+    flexDirection: "column",
+    justifyContent: "space-around",
+    paddingTop: 15
   }
 });

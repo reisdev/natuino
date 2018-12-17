@@ -2,10 +2,8 @@ import React from "react";
 
 import {
   StyleSheet,
-  Text,
   View,
-  StatusBar,
-  ToolbarAndroid
+  StatusBar
 } from "react-native";
 
 import DeviceList from "./src/components/DevicesList";
@@ -39,7 +37,7 @@ export default class App extends React.Component {
   };
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         <StatusBar hidden/>
         <Header
           outerContainerStyles={{ height: 56 }}
@@ -64,10 +62,8 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
+    flex: 1
   },
   toolbar: {
     height: 60,
