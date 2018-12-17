@@ -1,3 +1,12 @@
+/***************************************************
+ * 
+ *  @Author: Matheus dos Reis <matheusdrdj@gmail.com>
+ *  @Date: 15/12/2018 
+ *  @Description: Component to list the Available BT
+ *  devices, paired or not.
+ * 
+ **************************************************/
+
 import React, { Component } from "react";
 
 import {
@@ -38,6 +47,7 @@ const ListModel = props => (
     </List>
   </View>
 );
+
 export default class DevicesList extends Component {
   constructor(props) {
     super(props);
@@ -94,30 +104,30 @@ export default class DevicesList extends Component {
       <View style={styles.container}>
         <View
           style={{
-            flex: 1,
+            flex: 2,
             flexDirection: "row",
-            justifyContent: "space-around"
+            justifyContent: "space-between",
+            backgroundColor: "white",
+            marginBottom: 10
           }}
         >
           <Button
-            rounded
             color={"white"}
             backgroundColor={"#0F728F"}
-            large
+            small
             onPress={this.scanDevice}
             title={"Scan"}
           />
           <Button
-            rounded
             disabled={this.state.deviceId === 0}
             color={"white"}
             backgroundColor={"#0F728F"}
-            large
+            small
             onPress={this.disconnect}
             title={"Disconnect"}
           />
         </View>
-        <ScrollView>
+        <ScrollView contentContainerStyle={{alignContent: "flex-start", justifyContent: "space-between"}}>
           <ListModel
             title={"Paired devices"}
             devices={this.state.paired}
@@ -138,9 +148,7 @@ export default class DevicesList extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "space-around",
+    flex: 2,
     paddingTop: 15
   }
 });

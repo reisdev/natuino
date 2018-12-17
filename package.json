@@ -1,16 +1,16 @@
 {
   "name": "natuino",
-  "author": "Matheus dos Reis <matheusdrdj@gmail.com",
+  "author": "Matheus dos Reis <matheusdrdj@gmail.com>",
   "description": "App to control Arduino Boards",
   "scripts": {
     "start": "react-native start",
     "android": "react-native run-android",
-    "ios": "react-native run-ios"
+    "ios": "react-native run-ios",
+    "postInstall": "react-native link"
   },
   "dependencies": {
     "react": "^16.5.1",
     "react-native": "^0.57.3",
-    "react-native-ble-plx": "^1.0.1",
     "react-native-bluetooth-serial": "^1.0.0-rc1",
     "react-native-elements": "^0.19.1",
     "react-native-vector-icons": "^6.1.0",
