@@ -1,16 +1,15 @@
 /***************************************************
- * 
+ *
  *  @Author: Matheus dos Reis <matheusdrdj@gmail.com>
- *  @Date: 15/12/2018 
+ *  @Date: 15/12/2018
  *  @Description: Component to list the Available BT
  *  devices, paired or not.
- * 
+ *
  **************************************************/
 
 import React, { Component } from "react";
 
 import {
-  Alert,
   ToastAndroid,
   View,
   Text,
@@ -18,6 +17,8 @@ import {
   ScrollView
 } from "react-native";
 import { Button, List, ListItem } from "react-native-elements";
+
+import BluetoothSerial from "react-native-bluetooth-serial";
 
 const ListModel = props => (
   <View>
@@ -48,7 +49,8 @@ const ListModel = props => (
   </View>
 );
 
-export default class DevicesList extends Component {
+class DevicesList extends Component {
+  bt = BluetoothSerial
   constructor(props) {
     super(props);
     this.state = {
@@ -62,12 +64,12 @@ export default class DevicesList extends Component {
     this.scanDevice();
   }
   scanDevice = async e => {
-    const unpaired = await this.props.bt.discoverUnpairedDevices();
-    const paired = await this.props.bt.list();
+    const unpaired = await this.bt.discoverUnpairedDevices();
+    const paired = await this.bt.list();
     this.setState({ paired, unpaired });
   };
   connect = device => {
-    this.props.bt
+    this.bt
       .connect(device.id)
       .then(res => {
         this.setState({ deviceId: device.id, deviceName: device.name });
@@ -84,7 +86,7 @@ export default class DevicesList extends Component {
   };
 
   disconnect = () => {
-    this.props.bt
+    this.bt
       .disconnect()
       .then(res => {
         this.setState({ deviceId: 0, deviceName: "" });
@@ -127,7 +129,10 @@ export default class DevicesList extends Component {
             title={"Disconnect"}
           />
         </View>
-        <ScrollView contentContainerStyle={{alignContent: "flex-start", justifyContent: "space-between"}}>
+        <ScrollView
+          contentContainerStyle={{
+          }}
+        >
           <ListModel
             title={"Paired devices"}
             devices={this.state.paired}
@@ -152,3 +157,5 @@ const styles = StyleSheet.create({
     paddingTop: 15
   }
 });
+
+export default DevicesList;

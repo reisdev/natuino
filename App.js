@@ -11,13 +11,13 @@
 import React from "react";
 
 import { StyleSheet, View, StatusBar, ToolbarAndroid } from "react-native";
-
-import DeviceList from "./src/components/DevicesList";
-
 import BluetoothSerial from "react-native-bluetooth-serial";
 import { Header, Icon } from "react-native-elements";
+import { createAppContainer } from "react-navigation"
 
-export default class App extends React.Component {
+import Router from "./src/router"
+
+class App extends React.Component {
   btManager = BluetoothSerial;
   constructor(props) {
     super(props);
@@ -60,16 +60,7 @@ export default class App extends React.Component {
             underlayColor: "transparent"
           }}
         />
-        <DeviceList bt={this.btManager} />
-        <Header
-          backgroundColor={"#0F728F"}
-          outerContainerStyles={{ height: 56}}
-        >
-          <Icon name="home" color="white" />
-          <Icon name="dashboard" color="white"/>
-          <Icon name="message" color="white"/>
-          <Icon name="settings" color="white"/>
-        </Header>
+        <Router/>
       </View>
     );
   }
@@ -85,3 +76,5 @@ const styles = StyleSheet.create({
     paddingBottom: -2
   }
 });
+
+export default App
