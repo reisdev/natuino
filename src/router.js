@@ -1,10 +1,6 @@
 import React from "react";
 
-import {
-  createBottomTabNavigator,
-  createAppContainer,
-  TabBarBottom
-} from "react-navigation";
+import { createBottomTabNavigator, createAppContainer } from "react-navigation";
 import { Icon } from "react-native-elements";
 import { ToolbarAndroid } from "react-native";
 import BluetoothSerial from "react-native-bluetooth-serial";
@@ -30,20 +26,20 @@ const navigator = createBottomTabNavigator(tabs, {
   swipeEnabled: true,
   navigationOptions: {
     headerStyle: {
-        padding: 10
+      padding: 10
     }
   },
   tabBarOptions: {
     showIcon: true,
     style: {
-        backgroundColor: "#0F728F",
-        padding: 5
+      backgroundColor: "#0F728F",
+      padding: 5
     },
     activeTintColor: "white",
     inactiveTintColor: "white"
   },
   defaultNavigationOptions: ({ navigation }) => ({
-    tabBarIcon: ({focused}) => {
+    tabBarIcon: ({ focused }) => {
       const { routeName } = navigation.state;
       let icon;
       switch (routeName) {
@@ -57,7 +53,13 @@ const navigator = createBottomTabNavigator(tabs, {
           icon = "";
           break;
       }
-      return <Icon type="material-community" name={focused ? icon : icon+"-outline"} color="white" />;
+      return (
+        <Icon
+          type="material-community"
+          name={focused ? icon : icon + "-outline"}
+          color="white"
+        />
+      );
     },
     tabBarPosition: "bottom"
   })

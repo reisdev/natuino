@@ -8,63 +8,59 @@
  *
  **************************************************/
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-import { StyleSheet, View, StatusBar, ToolbarAndroid } from "react-native";
+import { StyleSheet, View, StatusBar } from "react-native";
 import BluetoothSerial from "react-native-bluetooth-serial";
-import { Header, Icon } from "react-native-elements";
-import { createAppContainer } from "react-navigation"
+import { Header } from "react-native-elements";
 
-import Router from "./src/router"
+import Router from "./src/router";
 
-class App extends React.Component {
-  btManager = BluetoothSerial;
-  constructor(props) {
-    super(props);
-    this.state = {
-      btStatus: false
-    };
-  }
-  async componentDidMount() {
-    const status = await this.btManager.isEnabled();
-    this.setState({
-      btStatus: status
-    });
-    this.btManager.on("bluetoothEnabled", () => {
-      this.setState({ btStatus: true });
-    });
-    this.btManager.on("bluetoothDisabled", () => {
-      this.setState({ btStatus: false });
-    });
-  }
-  toggleBt = e => {
-    if (this.state.btStatus) this.btManager.disable();
-    else this.btManager.enable();
+const App = props => {
+  const [btStatus, setBluetoothStatus] = useState(false);
+  const btManager = BluetoothSerial;
+
+  const getStatusFromDevice = async () => {
+    const status = await btManager.isEnabled();
+    setBluetoothStatus(status);
   };
-  render() {
-    return (
-      <View style={styles.container}>
-        <StatusBar hidden />
-        <Header
-          outerContainerStyles={{ height: 56 }}
-          backgroundColor={"#0F728F"}
-          centerComponent={{
-            text: "Natuino",
-            style: { color: "white", fontSize: 20 }
-          }}
-          rightComponent={{
-            icon: this.state.btStatus ? "bluetooth" : "bluetooth-disabled",
-            onPress: () => this.toggleBt(),
-            color: "white",
-            size: 25,
-            underlayColor: "transparent"
-          }}
-        />
-        <Router/>
-      </View>
-    );
-  }
-}
+
+  useEffect(() => {
+    getStatusFromDevice();
+    btManager.on("bluetoothEnabled", () => {
+      setBluetoothStatus(true);
+    });
+    btManager.on("bluetoothDisabled", () => {
+      setBluetoothStatus(false);
+    });
+  }, []);
+
+  const toggleBt = e => {
+    if (!btStatus) btManager.disable();
+    else btManager.enable();
+  };
+  return (
+    <View style={styles.container}>
+      <StatusBar hidden />
+      <Header
+        outerContainerStyles={{ height: 56 }}
+        backgroundColor={"#0F728F"}
+        centerComponent={{
+          text: "Natuino",
+          style: { color: "white", fontSize: 20 }
+        }}
+        rightComponent={{
+          icon: btStatus ? "bluetooth" : "bluetooth-disabled",
+          onPress: () => toggleBt(),
+          color: "white",
+          size: 25,
+          underlayColor: "transparent"
+        }}
+      />
+      <Router />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -77,4 +73,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default App
+export default App;
